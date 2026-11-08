@@ -23,7 +23,7 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
     "lerobot>=0.6.1,<0.7",
-    "robocandywrapper",
+    "robocandywrapper @ git+https://github.com/rtalwar2/RoboCandyWrapper@lerobot-0.6.1",
     "numpy",
     "scipy>=1.7.0",
     "torch",
