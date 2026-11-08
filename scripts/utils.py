@@ -4,7 +4,7 @@ Utility functions for training and visualization scripts.
 from typing import Optional
 from lerobot.configs.policies import PreTrainedConfig
 from lerobot.datasets.lerobot_dataset import LeRobotDatasetMetadata
-from lerobot.datasets.utils import dataset_to_policy_features
+from lerobot.utils.feature_utils import dataset_to_policy_features
 from lerobot.configs.types import FeatureType
 
 # Import from installed policy packages

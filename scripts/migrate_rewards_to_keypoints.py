@@ -389,7 +389,7 @@ def migrate_dataset_rewards(
     
     if "reward" in base_dataset.meta.info["features"]:
         del base_dataset.meta.info["features"]["reward"]
-        from lerobot.datasets.utils import write_info
+        from lerobot.datasets.io_utils import write_info
         write_info(base_dataset.meta.info, base_dataset.root)
         if verbose:
             print("   ✓ Updated info.json to remove reward feature")

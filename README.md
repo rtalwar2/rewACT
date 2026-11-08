@@ -11,7 +11,7 @@ This repository is organized into several installable packages:
 - **`lerobot_policy_rewact`**: RewACT policy plugin - extends ACT with reward prediction using a distributional value function
 - **`lerobot_policy_actvantage`**: ACTvantage policy plugin - advantage-conditioned ACT policy in the style of pi*0.6
 
-Both policy plugins are standalone, installable packages that integrate with LeRobot's training and evaluation tools. They have minimal dependencies (only `lerobot >= 0.4` required).
+Both policy plugins are standalone, installable packages that integrate with LeRobot's training and evaluation tools. They have minimal dependencies (only `lerobot >= 0.6.1, < 0.7` required).
 
 ### Tools Package
 
@@ -45,6 +45,8 @@ pip install -e .
 cd rewact_tools
 pip install -e .
 ```
+
+`rewact_tools` needs a robocandywrapper release that supports lerobot 0.6.1 (robocandywrapper >= 0.3.0).
 
 ## Usage
 
@@ -92,11 +94,21 @@ python scripts/train.py \
     --output_dir=outputs/train/so100_test_2 \
     --job_name=so100_test \
     --batch_size=32 \
-    --eval_freq=-1 \
     --log_freq=50 \
     --save_freq=1000 \
     --steps=10000
 ```
+
+`scripts/train.py` trains the reward head on Pi*0.6-style cumulative rewards, which need a success/failure label for every
+training episode. Label them in `{dataset_root}/candywrapper_plugins/episode_outcome/outcomes.json`:
+
+```json
+[{"episode_index": 0, "outcome": "success"}, {"episode_index": 1, "outcome": "failure"}]
+```
+
+For a dataset of demonstrations only, label every episode `"success"`. Episodes without a label get no reward and the
+training step fails with `KeyError: 'reward'`. An optional `scripts/configs/sampler_rewact.json` (robocandywrapper sampler
+config) overrides `--dataset.episodes`.
 
 ### Evaluating the trained RewACT policy
 

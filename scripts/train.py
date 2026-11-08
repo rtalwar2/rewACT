@@ -28,21 +28,21 @@ from torch.optim import Optimizer
 from lerobot.configs import parser
 from lerobot.configs.train import TrainPipelineConfig
 from lerobot.datasets.sampler import EpisodeAwareSampler
-from lerobot.datasets.utils import cycle
 from lerobot.optim.factory import make_optimizer_and_scheduler
 from lerobot.policies.pretrained import PreTrainedPolicy
 from lerobot.policies.utils import get_device_from_parameters
 from lerobot.utils.logging_utils import AverageMeter, MetricsTracker
 from lerobot.utils.random_utils import set_seed
-from lerobot.utils.train_utils import (
+from lerobot.common.train_utils import (
     get_step_checkpoint_dir,
     load_training_state,
     save_checkpoint,
     update_last_checkpoint,
 )
+from lerobot.utils.device_utils import get_safe_torch_device
 from lerobot.utils.utils import (
+    cycle,
     format_big_number,
-    get_safe_torch_device,
     has_method,
     init_logging,
 )
@@ -124,8 +124,10 @@ def train(cfg: TrainPipelineConfig):
     # Force pyav video decoding to avoid issues with torchcodec and GPU-accelerated video decoding in the cloud.
     cfg.dataset.video_backend = "pyav"
 
+    # Optional per-run episode selection; without the file, --dataset.episodes (or all episodes) is used.
     sampler_config = load_sampler_config("scripts/configs/sampler_rewact.json")
-    cfg.dataset.episodes = sampler_config.episodes
+    if sampler_config is not None and sampler_config.episodes is not None:
+        cfg.dataset.episodes = sampler_config.episodes
 
     # Check device is available
     device = get_safe_torch_device(cfg.policy.device, log=True)

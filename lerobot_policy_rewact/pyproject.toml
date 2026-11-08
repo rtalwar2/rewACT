@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lerobot_policy_rewact"
-version = "0.1.4"
+version = "0.2.0"
 description = "RewACT: Reward-Augmented Action Chunking with Transformers - LeRobot Policy Plugin"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -22,7 +22,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "lerobot>=0.4",
+    "lerobot>=0.6.1,<0.7",
     "einops>=0.6.0",
     "torch",
     "torchvision",
