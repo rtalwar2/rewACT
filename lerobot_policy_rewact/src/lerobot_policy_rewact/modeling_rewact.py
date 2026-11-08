@@ -320,11 +320,11 @@ class RewACT(nn.Module):
             # Projection layer for joint-space configuration to hidden dimension.
             # if self.config.robot_state_feature:
             self.vae_encoder_robot_state_input_proj = nn.Linear(
-                7, config.dim_model
+                self.config.robot_state_feature.shape[0], config.dim_model
             )
             # Projection layer for action (joint-space target) to hidden dimension.
             self.vae_encoder_action_input_proj = nn.Linear(
-                7,
+                self.config.action_feature.shape[0],
                 config.dim_model,
             )
             # Projection layer from the VAE encoder's output to the latent distribution's parameter space.
@@ -351,7 +351,7 @@ class RewACT(nn.Module):
         # [latent, (robot_state), (env_state), (image_feature_map_pixels)].
         # if self.config.robot_state_feature:
         self.encoder_robot_state_input_proj = nn.Linear(
-            7, config.dim_model
+            self.config.robot_state_feature.shape[0], config.dim_model
         )
         if self.config.env_state_feature:
             self.encoder_env_state_input_proj = nn.Linear(
@@ -371,7 +371,7 @@ class RewACT(nn.Module):
         self.decoder_pos_embed = nn.Embedding(config.chunk_size, config.dim_model)
 
         # Final action regression head on the output of the transformer's decoder.
-        self.action_head = nn.Linear(config.dim_model, 7)
+        self.action_head = nn.Linear(config.dim_model, self.config.action_feature.shape[0])
 
         # Distributional value prediction head: predicts distribution over bins
         self.reward_head = nn.Sequential(
